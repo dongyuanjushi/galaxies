@@ -1,5 +1,5 @@
 from util.select import select
-from model.decision_tree import execute
+from model.supervised_learning import execute
 
 if __name__ == '__main__':
     base_url = "./"
