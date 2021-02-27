@@ -10,11 +10,13 @@ import joblib
 import numpy as np
 import matplotlib.pyplot as plt
 
-features = ["TType", "K", "C", "A", "S", "G2", "H"]
+# features = ["TType", "K", "C", "A", "S", "G2", "H"]
+features = ["Pixel%d" % i for i in range(64 * 64)]
+labels = ["Category"]
 
 
 def build(train_data, mode):
-    train_y, train_x = train_data["Class"], train_data[features]
+    train_y, train_x = train_data[labels], train_data[features]
     model_path = "weights/" + mode + ".model"
     if os.path.exists(model_path):
         model = joblib.load(model_path)
@@ -25,7 +27,7 @@ def build(train_data, mode):
     elif mode == "RandomForest":
         model = RandomForestClassifier(class_weight='balanced', max_features='sqrt', max_depth=4)
     elif mode == "MLP":
-        model = MLPClassifier(max_iter=1000,learning_rate_init=0.01)
+        model = MLPClassifier(max_iter=1000, learning_rate_init=0.01)
     # default use Decision Tree Models
     else:
         model = DecisionTreeClassifier(class_weight='balanced', max_depth=4)
@@ -35,7 +37,7 @@ def build(train_data, mode):
 
 
 def predict(val_data, model):
-    val_y, val_x = val_data["Class"], val_data[features]
+    val_y, val_x = val_data[labels], val_data[features]
     prediction_y = model.predict_proba(val_x)
     accuracy = model.score(val_x, val_y)
     return accuracy, prediction_y, val_y
@@ -47,18 +49,20 @@ def k_cross_validation(train_path):
     mode = ["DecisionTree", "SVM", "RandomForest"]
     piece = len(total_data) // K
     accuracy = []
+    current_mode = "Random Forest"
     for i in range(K):
+        print("Round {}".format(i+1))
         val_data = total_data[(piece * i):(piece * (i + 1))]
         train_data = pd.concat([total_data[:piece * i], total_data[piece * (i + 1):]])
-        model = build(train_data, mode[2])
+        model = build(train_data, current_mode)
         acc, pre_y, val_y = predict(val_data, model)
         accuracy.append(acc)
         pre_y = np.array(pre_y)
         val_y = concat(val_y)
         # roc_plot(val_y, pre_y, mode[2], i + 1)
     accuracy = np.array(accuracy)
-    print("Each Round Accuracy of the {} model is {}".format(mode[2], accuracy))
-    print("The Average Accuracy of K-cross Validation for {} Model is {}".format(mode[2], np.average(accuracy)))
+    print("Each Round Accuracy of the {} model is {}".format(current_mode, accuracy))
+    print("The Average Accuracy of K-cross Validation for {} Model is {}".format(current_mode, np.average(accuracy)))
 
 
 def roc_plot(val_y, pre_y, mode, cross):
@@ -73,5 +77,5 @@ def roc_plot(val_y, pre_y, mode, cross):
     plt.show()
 
 
-def execute(train_path, val_path, test_path):
+def execute(train_path, val_path=None, test_path=None):
     k_cross_validation(train_path)
