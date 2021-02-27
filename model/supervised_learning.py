@@ -1,35 +1,44 @@
 import pandas as pd
+import os
 from sklearn.tree import DecisionTreeClassifier
 from sklearn import svm
 from sklearn import metrics
-from sklearn.linear_model import SGDClassifier
+from util.select import concat
 from sklearn.ensemble import RandomForestClassifier
+from sklearn.neural_network import MLPClassifier
+import joblib
 import numpy as np
 import matplotlib.pyplot as plt
 
 features = ["TType", "K", "C", "A", "S", "G2", "H"]
 
 
-def build(train_data, val_data, mode):
+def build(train_data, mode):
     train_y, train_x = train_data["Class"], train_data[features]
-    val_y, val_x = val_data["Class"], val_data[features]
-    if mode == "SVM":
+    model_path = "weights/" + mode + ".model"
+    if os.path.exists(model_path):
+        model = joblib.load(model_path)
+    elif mode == "SVM":
         model = svm.SVC(kernel='linear', probability=True, class_weight='balanced')
     # elif mode == "SGD":
     #     model = SGDClassifier(penalty='l2', class_weight='balanced')
     elif mode == "RandomForest":
-        model = RandomForestClassifier(class_weight='balanced', max_features='sqrt')
-    # default use Decision Tree Model
+        model = RandomForestClassifier(class_weight='balanced', max_features='sqrt', max_depth=4)
+    elif mode == "MLP":
+        model = MLPClassifier(max_iter=1000,learning_rate_init=0.01)
+    # default use Decision Tree Models
     else:
         model = DecisionTreeClassifier(class_weight='balanced', max_depth=4)
     model.fit(train_x, train_y)
+    joblib.dump(model, model_path)
+    return model
+
+
+def predict(val_data, model):
+    val_y, val_x = val_data["Class"], val_data[features]
     prediction_y = model.predict_proba(val_x)
     accuracy = model.score(val_x, val_y)
     return accuracy, prediction_y, val_y
-
-
-def concat(test_y):
-    return np.array([i for i in test_y.values])
 
 
 def k_cross_validation(train_path):
@@ -41,7 +50,8 @@ def k_cross_validation(train_path):
     for i in range(K):
         val_data = total_data[(piece * i):(piece * (i + 1))]
         train_data = pd.concat([total_data[:piece * i], total_data[piece * (i + 1):]])
-        acc, pre_y, val_y = build(train_data, val_data, mode[2])
+        model = build(train_data, mode[2])
+        acc, pre_y, val_y = predict(val_data, model)
         accuracy.append(acc)
         pre_y = np.array(pre_y)
         val_y = concat(val_y)
