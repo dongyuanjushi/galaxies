@@ -11,7 +11,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # features = ["TType", "K", "C", "A", "S", "G2", "H"]
-features = ["Pixel%d" % i for i in range(64 * 64)]
+features = ["Pixel%d" % i for i in range(32 * 32)]
 labels = ["Category"]
 
 
