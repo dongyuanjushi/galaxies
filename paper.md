@@ -17,7 +17,7 @@ The main idea of decision tree is to generate different conditions from the data
 
 The accuracy of each round of K-cross-validation is [0.932 0.918 0.912 0.904 0.942 0.914 0.924 0.924 0.898 0.914] and final accuracy is 0.9182 and ROC curve is shown below. 
 
-![](/home/mark/project/galaxies/Decision Tree.png)
+<img src="E:\iselab\IseWork\galaxies\Decision Tree.png" style="zoom: 50%;" />
 
 #### Random Forest
 
@@ -25,7 +25,7 @@ Random forest is a extensive method of decision tree. It adopts different decisi
 
 The accuracy of each round of K-cross-validation is [0.972 0.952 0.974 0.968 0.966 0.962 0.964 0.964 0.958 0.968] and final accuracy is 0.9648 and ROC curve is shown below. 
 
-![](/home/mark/project/galaxies/Random Forest.png)
+<img src="E:\iselab\IseWork\galaxies\Random Forest.png" style="zoom: 50%;" />
 
 #### SVM (Supporting Vector Machine)
 
@@ -33,4 +33,4 @@ SVM is aimed to find a largest-distanced Hyperplane to make classfications, whic
 
 The accuracy of each round of K-cross-validation is [0.894 0.898 0.892 0.898 0.908 0.892 0.902 0.872 0.882 0.886] and final accuracy is 0.8924 and ROC curve is shown below. 
 
-![](/home/mark/project/galaxies/SVM.png)
+<img src="E:\iselab\IseWork\galaxies\SVM.png" style="zoom: 50%;" />
