@@ -1,6 +1,4 @@
 import pandas as pd
-import os
-import cv2
 from sklearn.utils import shuffle
 import numpy as np
 
@@ -20,6 +18,7 @@ def read(url):
     data_frame = data_frame[data_frame["Error"] != 2]
     train_csv = data_frame.rename(columns={'ML2classes': "Class"}).drop(columns=classified_data)
     train_csv["Class"] = train_csv["Class"].map({"1": int(1), "0": int(0)})
+    print(train_csv["Class"].value_counts())
     return train_csv[~train_csv["Class"].isin(['U', '--'])]
 
 
@@ -41,5 +40,5 @@ def balanced_select(raw_data, size):
 def select(base_url):
     data_frame = read(base_url)
     data_frame = data_frame.sample(frac=1)
-    data_frame = balanced_select(data_frame, 20000)
+    data_frame = balanced_select(data_frame, 5000)
     data_frame.to_csv("train.csv")
