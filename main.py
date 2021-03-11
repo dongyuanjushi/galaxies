@@ -5,7 +5,7 @@ from model.active_learning import a_execute
 if __name__ == '__main__':
     base_url = "galaxies.csv"
     train_url = "train.csv"
-    
+
     # data shuffle and preprocess
     # select(base_url)
 
