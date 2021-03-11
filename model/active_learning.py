@@ -9,6 +9,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import time
 
+
 batch = 250
 accuracies = {}
 acc_threshold = 0.96
