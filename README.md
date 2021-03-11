@@ -1,10 +1,10 @@
 # Source code
 
 ## Python Library Requirements
-pandas
-matplotlib
-scikit-learn
-numpy
+pandas  
+matplotlib  
+scikit-learn  
+numpy  
 
 ## main
 entry to run the program
